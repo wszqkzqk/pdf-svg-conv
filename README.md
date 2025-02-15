@@ -1,8 +1,10 @@
-# PdfSvgConv: A Powerful PDF/SVG Format Conversion Tool
-PdfSvgConv is a powerful PDF/SVG format conversion tool that supports multi-threaded PDF to SVG conversion, PDF decryption, and plans to support SVG to PDF conversion.
+# PDF/SVG Converter: A Powerful PDF/SVG Format Conversion Tool
+English | [简体中文](README-zh.md)
+
+PDF/SVG Converter is a powerful PDF/SVG format conversion tool that supports multi-threaded PDF to SVG conversion, PDF decryption, and plans to support SVG to PDF conversion.
 
 ## Features
-### NeoPdf2Svg (`neopdf2svg`)
+### Neo PDF to SVG (`neopdf2svg`)
 * Supports multi-threaded PDF to SVG conversion
   * Each page is processed in parallel, improving conversion speed
 * Supports PDF password decryption
@@ -63,7 +65,7 @@ meson install -C builddir
 ```
 
 ## Usage
-### NeoPdf2Svg
+### Neo PDF to SVG (`neopdf2svg`)
 Run `neopdf2svg --help` to view help information:
 ```log
 Usage:

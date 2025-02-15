@@ -1,10 +1,11 @@
-# PdfSvgConv：强大的 PDF/SVG 格式转化工具
+# PDF/SVG Converter：强大的 PDF/SVG 格式转化工具
+[English](README.md) | 简体中文
 
-PdfSvgConv 是一个强大的 PDF/SVG 格式转化工具，支持多线程的 PDF 转 SVG，支持 PDF 解密，计划支持 SVG 转 PDF。
+PDF/SVG Converter 是一个强大的 PDF/SVG 格式转化工具，支持多线程的 PDF 转 SVG，支持 PDF 解密，计划支持 SVG 转 PDF。
 
 ## 特性
 
-### NeoPdf2Svg (`neopdf2svg`)
+### Neo PDF to SVG (`neopdf2svg`)
 
 * 支持多线程的 PDF 转 SVG
   * 每页转化并行处理，提高转化速度
@@ -79,7 +80,7 @@ meson install -C builddir
 
 ## 使用
 
-### NeoPdf2Svg
+### Neo PDF to SVG (`neopdf2svg`)
 
 运行 `neopdf2svg --help` 查看帮助信息：
 
