@@ -12,7 +12,7 @@ PDF/SVG Converter is a powerful PDF/SVG format conversion tool that supports mul
 * Supports selective conversion
   * Supports conversion of specified page numbers
   * Supports conversion of specified page ranges
-  * Supports `printf`-style integer formatting for SVG filenames
+  * Supports `printf`-style integer formatting for multi SVG filenames
     * For example, `output-%03d.svg` will output `output-001.svg`, `output-002.svg`, ...
 
 ### Neo SVG to PDF (`neosvg2pdf`)

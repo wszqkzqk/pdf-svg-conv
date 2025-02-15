@@ -14,7 +14,7 @@ PDF/SVG Converter 是一个强大的 PDF/SVG 格式转化工具，支持多线�
 * 支持选择性转化
   * 支持指定页码转化
   * 支持指定页码范围转化
-  * 支持 `printf` 的整数格式化输出 SVG 文件名
+  * 导出多页时，支持 `printf` 的整数格式化输出 SVG 文件名
     * 例如 `output-%03d.svg` 会输出 `output-001.svg`, `output-002.svg`, ...
 
 ### Neo SVG to PDF (`neosvg2pdf`)
