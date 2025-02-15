@@ -53,9 +53,9 @@ makepkg-mingw -si
   * GIO
 * Cairo
 * Poppler
-  * Poppler-Glib
+  * Poppler-GLib
 * Pango
-* RSVG
+* Rsvg
 * help2man (optional, for generating manpages)
 
 **Build-time dependencies** - In addition to runtime dependencies, you also need:

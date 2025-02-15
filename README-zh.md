@@ -67,7 +67,7 @@ makepkg-mingw -si
 * Poppler
   * Poppler-GLib
 * Pango
-* RSVG
+* Rsvg
 * help2man （可选，用于生成 manpage）
 
 **构建时依赖** - 除了运行时依赖外，还需要：
