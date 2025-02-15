@@ -114,7 +114,7 @@ public class PdfSvgConv.SvgMakerMT {
         try {
             pdffile = new Poppler.Document.from_file (pdf_uri, password);
         } catch (Error e) {
-            Reporter.error ("PopplerError", e.message);
+            Reporter.error ("PopplerError", "failed to open file %s: %s", pdf_uri, e.message);
             return 1; // Poppler error
         }
 
@@ -145,7 +145,7 @@ public class PdfSvgConv.SvgMakerMT {
                     failure_count += 1;
                     progress.update (success_count, failure_count);
                 } catch (Error e) {
-                    Reporter.error ("PopplerError", e.message);
+                    Reporter.error ("PopplerError", "failed to convert page %d: %s", i + 1, e.message);
                     failure_count += 1;
                     progress.update (success_count, failure_count);
                 }
@@ -185,7 +185,7 @@ public class PdfSvgConv.SvgMakerMT {
                     failure_count += 1;
                     progress.update (success_count, failure_count);
                 } catch (Error e) {
-                    Reporter.error ("PopplerError", e.message);
+                    Reporter.error ("PopplerError", "failed to convert page %d: %s", i + 1, e.message);
                     failure_count += 1;
                     progress.update (success_count, failure_count);
                 }
@@ -210,7 +210,7 @@ public class PdfSvgConv.SvgMakerMT {
             try {
                 automt_convert_page (pdffile, page_index, svg_filename, pdf_uri, password);
             } catch (Error e) {
-                Reporter.error ("PopplerError", e.message);
+                Reporter.error ("PopplerError", "failed to convert page %d: %s", page_index + 1, e.message);
                 failure_count += 1;
                 progress.update (success_count, failure_count);
             }

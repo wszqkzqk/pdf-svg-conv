@@ -45,7 +45,7 @@ public class PdfSvgConv.Svg2Pdf {
             try {
                 svg_handle = new Rsvg.Handle.from_file (svg_file);
             } catch (Error e) {
-                Reporter.error ("RsvgError", e.message);
+                Reporter.error ("RsvgError", "failed to load file %s: %s", svg_file, e.message);
                 failure_count += 1;
                 progress.update (success_count, failure_count);
                 continue;
@@ -68,7 +68,7 @@ public class PdfSvgConv.Svg2Pdf {
             try {
                 svg_handle.render_document (cr, bbox);
             } catch (Error e) {
-                Reporter.error ("RsvgError", e.message);
+                Reporter.error ("RsvgError", "failed to render file %s: %s", svg_file, e.message);
                 failure_count += 1;
                 continue;
             }
