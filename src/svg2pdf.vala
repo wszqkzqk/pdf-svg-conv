@@ -47,6 +47,7 @@ public class PdfSvgConv.Svg2Pdf {
             } catch (Error e) {
                 Reporter.error ("RsvgError", e.message);
                 failure_count += 1;
+                progress.update (success_count, failure_count);
                 continue;
             }
 
