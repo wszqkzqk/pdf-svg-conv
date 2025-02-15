@@ -1,4 +1,4 @@
-/* Copyright 2025 Zhou Qiankang <wszqkzqk@qq.com>
+/* Copyright 2024 Zhou Qiankang <wszqkzqk@qq.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -264,10 +264,24 @@ public class PdfSvgConv.Reporter {
 
         string title;
         double percentage = 0.0;
-        int total_steps;
         int current_step = 0;
-        char fill_char;
-        char empty_char;
+        char fill_char = '#';
+        char empty_char = '-';
+        Mutex mutex;
+        int _total_steps = 0;
+
+        public int total_steps {
+            get {
+                return _total_steps;
+            }
+            set {
+                mutex.lock ();
+                _total_steps = value;
+                current_step = 0;
+                percentage = 0.0;
+                mutex.unlock ();
+            }
+        }
 
         /**
          * Constructs a ProgressBar object.
@@ -285,6 +299,7 @@ public class PdfSvgConv.Reporter {
             this.total_steps = total_steps;
             this.fill_char = fill_char;
             this.empty_char = empty_char;
+            this.mutex = Mutex ();
         }
 
         /**
@@ -295,21 +310,49 @@ public class PdfSvgConv.Reporter {
          * @return The current step number.
          */
         public int update (uint success_count, uint failure_count) {
+            mutex.lock ();
             current_step += 1;
             current_step = (current_step > total_steps) ? total_steps : current_step;
             percentage = (double) current_step / total_steps * 100.0;
-            print_progress ();
+            print_progress (success_count, failure_count);
+            mutex.unlock ();
             return current_step;
         }
 
         /**
          * Prints the current progress bar to the standard error output.
+         *
+         * @param success_count The number of successes.
+         * @param failure_count The number of failures.
          */
-        public void print_progress () {
-            var builder = new StringBuilder (title);
+        public void print_progress (uint success_count, uint failure_count) {
+            // The actual length of the prefix is the length of UNCOLORED prefix
+            // ANSI escapecode should not be counted
+            var prefix = "\rSuccess: %u Failure: %u ".printf (success_count, failure_count);
+            var prelength = prefix.length - 1; // -1 for \r
+            if (Reporter.color_setting.to_bool ()) {
+                // Optimized for string literal concatenation:
+                // Use `+` to concatenate string literals
+                // so that the compiler can optimize it to a single string literal at compile time
+                // But still use `concat` to concatenate non-literal strings, use `,` to split args
+                prefix = "\r".concat (
+                    Reporter.EscapeCode.ANSI_BOLD +
+                    Reporter.EscapeCode.ANSI_GREEN +
+                    "Success: ",
+                    success_count.to_string (),
+                    Reporter.EscapeCode.ANSI_RESET +
+                    " " +
+                    Reporter.EscapeCode.ANSI_BOLD +
+                    Reporter.EscapeCode.ANSI_RED +
+                    "Failure: ",
+                    failure_count.to_string (),
+                    Reporter.EscapeCode.ANSI_RESET +
+                    " ");
+            }
+            var builder = new StringBuilder (prefix);
+            builder.append (title);
             // 12 is the length of ": [] 100.00%"
-            const int EXTRA_LENGTH = 12;
-            int bar_length = Reporter.get_console_width () - title.length - EXTRA_LENGTH;
+            int bar_length = Reporter.get_console_width () - prelength - title.length - 12;
             // Only the the effictive length of progressbar is no less than 5, the progressbar will be shown
             if (Reporter.color_setting.to_bool () && bar_length >= 5) {
                 builder.append (": [");

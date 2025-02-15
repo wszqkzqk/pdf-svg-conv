@@ -10,33 +10,40 @@ basic_deps = [
   gio,
   cairo,
 ]
+pdf2svg_deps = basic_deps + [
+  poppler,
+]
+svg2pdf_deps = basic_deps + [
+  rsvg,
+]
 
 basic_sources = [
   'platformbindings.c',
   'reporter.vala',
   version_file,
 ]
+pdf2svg_source = basic_sources + [
+  'svgmakermt.vala',
+  'task2svg.vala',
+  'pdf2svg.vala',
+]
+svg2pdf_source = basic_sources + [
+  'svg2pdf.vala',
+]
 
 pdf2svg_name = 'neopdf2svg'
-
-pdf2svg_deps = basic_deps + [
-  poppler,
-]
-
-pdf2svg_source = basic_sources + [
-  'mt2svg.vala',
-  'pdf2svg.vala',
-  'task2svg.vala',
-]
-
-svg2pdf_deps = basic_deps + [
-  rsvg,
-]
+svg2pdf_name = 'neosvg2pdf'
 
 pdf2svg_bin = executable(
   pdf2svg_name,
   pdf2svg_source,
   dependencies: pdf2svg_deps,
+  install: true,
+)
+svg2pdf_bin = executable(
+  svg2pdf_name,
+  svg2pdf_source,
+  dependencies: svg2pdf_deps,
   install: true,
 )
 
@@ -51,6 +58,20 @@ if help2man_prog.found()
       '-o',
       '@OUTPUT@',
       pdf2svg_bin,
+      '--no-discard-stderr',
+    ],
+    install : true,
+    install_dir : get_option('mandir') / 'man1',
+  )
+
+  custom_target('manpage-' + svg2pdf_name,
+    output : svg2pdf_name + '.1',
+    command : [
+      help2man_prog,
+      '-N',
+      '-o',
+      '@OUTPUT@',
+      svg2pdf_bin,
       '--no-discard-stderr',
     ],
     install : true,

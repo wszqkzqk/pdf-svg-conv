@@ -18,23 +18,67 @@
 */
 
 [Compact (opaque = true)]
-public class PdfSvgConv.Pdf2Svg {
+public class PdfSvgConv.Svg2Pdf {
     static bool show_help = false;
     static bool show_version = false;
     static int color_level = 1;
-    static int num_threads = 0;
-    static string? password = null;
-    static string? page_label = null;
+    //static int num_threads = 0;
 
     const OptionEntry[] options = {
         { "help", 'h', OptionFlags.NONE, OptionArg.NONE, ref show_help, "Show help message", null },
         { "version", 'v', OptionFlags.NONE, OptionArg.NONE, ref show_version, "Display version", null },
         { "color", '\0', OptionFlags.NONE, OptionArg.INT, ref color_level, "Color level of log, 0 for no color, 1 for auto, 2 for always, defaults to 1", "LEVEL" },
-        { "threads", 'T', OptionFlags.NONE, OptionArg.INT, ref num_threads, "Number of threads to use for extracting, 0 for auto", "NUM" },
-        { "password", 'p', OptionFlags.NONE, OptionArg.STRING, ref password, "Password for the PDF file", "PASSWORD" },
-        { "label", 'l', OptionFlags.NONE, OptionArg.STRING, ref page_label, "Page label, may be number (eg. 1), range (eg. 5-9), or 'all', 1-indexed", "LABEL" },
+        //{ "threads", 'T', OptionFlags.NONE, OptionArg.INT, ref num_threads, "Number of threads to use for extracting, 0 for auto", "NUM" },
         null
     };
+
+    static int convert_svgs (string[] svg_files, string pdf_file) {
+        Cairo.PdfSurface? surface = null;
+        Cairo.Context? cr = null;
+
+        uint success_count = 0;
+        uint failure_count = 0;
+
+        var progress = new Reporter.ProgressBar (svg_files.length, "Converting to one PDF");
+        foreach (unowned var svg_file in svg_files) {
+            Rsvg.Handle svg_handle;
+            try {
+                svg_handle = new Rsvg.Handle.from_file (svg_file);
+            } catch (Error e) {
+                Reporter.error ("RsvgError", e.message);
+                failure_count += 1;
+                continue;
+            }
+
+            bool has_width, has_height, has_viewbox;
+            Rsvg.Length width, height;
+            Rsvg.Rectangle bbox;
+            svg_handle.get_intrinsic_dimensions (out has_width, out width, out has_height, out height, out has_viewbox, out bbox);
+            double width_fp = (width.length > 0) ? width.length : 595; // A4 width
+            double height_fp = (height.length > 0) ? height.length : 842; // A4 height
+
+            if (surface == null) {
+                surface = new Cairo.PdfSurface (pdf_file, width_fp, height_fp);
+                cr = new Cairo.Context (surface);
+            } else {
+                surface.set_size (width_fp, height_fp);
+            }
+
+            try {
+                svg_handle.render_document (cr, bbox);
+            } catch (Error e) {
+                Reporter.error ("RsvgError", e.message);
+                failure_count += 1;
+                continue;
+            }
+            cr.show_page ();
+            
+            success_count += 1;
+            progress.update (success_count, failure_count);
+        }
+
+        return 0;
+    }
 
     // Main program function
     static int main (string[] original_args) {
@@ -48,18 +92,14 @@ public class PdfSvgConv.Pdf2Svg {
 #else
         var args = strdupv (original_args);
 #endif
-        var opt_context = new OptionContext ("<input-PDF-file> <output-SVG-file>");
+        var opt_context = new OptionContext ("<input-SVG-file> [moret-SVG-files ...] <output-PDF-file>");
         // DO NOT use the default help option provided by g_print
         // g_print will force to convert character set to windows's code page
         // which is imcompatible windows's bash, zsh, etc.
         opt_context.set_help_enabled (false);
         opt_context.add_main_entries (options, null);
         // Set a summary hint for multi-page output:
-        opt_context.set_summary (
-            "Convert a PDF file to SVG file(s).
-
-Hint: For multi-page conversion, use a format string like 'output-%04d.svg'."
-        );
+        opt_context.set_summary ("Convert SVG files to a PDF file.");
         try {
             opt_context.parse_strv (ref args);
         } catch (OptionError e) {
@@ -94,17 +134,17 @@ Hint: For multi-page conversion, use a format string like 'output-%04d.svg'."
             return 0;
         }
 
-        if (args.length != 3) {
-            stderr.puts (opt_context.get_help (true, null));
-            return 1; // Argument count error
+        // Get the input and output file paths
+        if (args.length < 2) {
+            Reporter.error_puts ("ArgumentError", "missing input or output file path");
+            stderr.printf ("\n%s", opt_context.get_help (true, null));
+            return 1; // Missing input or output file path error
         }
 
-        // Get the input and output file paths
-        string pdf_uri = File.new_for_commandline_arg (args[1]).get_uri ();
-        string svg_filename = args[2];
+        // The last argument is the output PDF file, the rest are input SVG files
+        string pdf_file = args[args.length - 1];
+        string[] svg_files = args[0:args.length - 1];
 
-        // Convert the PDF file
-        SvgMakerMT mt_converter = new SvgMakerMT (num_threads);
-        return mt_converter.convert_pdf (pdf_uri, svg_filename, password, page_label);
+        return convert_svgs (svg_files, pdf_file);
     }
 }
