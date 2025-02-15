@@ -23,7 +23,38 @@ PDF/SVG Converter 是一个强大的 PDF/SVG 格式转化工具，支持多线�
 * 支持彩色进度条显示
 * 支持将多张 SVG 按照顺序合并为单个 PDF
 
-## 构建
+## 构建脚本
+
+本项目提供 Arch Linux 与 Windows (MSYS2) 环境下的构建脚本。
+
+#### Arch Linux
+
+Arch Linux 可以直接从 AUR 安装，例如使用 AUR 助手 `paru`：
+
+```bash
+paru -S pdf-svg-conv
+```
+
+也可以手动克隆 AUR 仓库并构建、安装：
+
+```bash
+git clone https://aur.archlinux.org/pdf-svg-conv.git
+cd pdf-svg-conv
+makepkg -si
+```
+
+#### Windows (MSYS2)
+
+Windows (MSYS2) 可以使用提供的 [`PKGBUILD`](https://gist.github.com/wszqkzqk/5ece53f3cda6213c62c5f77a9da26af4) 构建，例如在 MSYS2 UCRT64 环境的 `bash` 下执行以下命令：
+
+```bash
+mkdir live-photo-conv
+cd live-photo-conv
+wget https://gist.githubusercontent.com/wszqkzqk/5ece53f3cda6213c62c5f77a9da26af4/raw/PKGBUILD
+makepkg-mingw -si
+```
+
+## 手动构建
 
 ### 依赖
 

@@ -1,5 +1,5 @@
 # PDF/SVG Converter: A Powerful PDF/SVG Format Conversion Tool
-[English](README.md) | Simplified Chinese
+English | [简体中文](README-zh.md)
 
 PDF/SVG Converter is a powerful PDF/SVG format conversion tool that supports multi-threaded PDF to SVG conversion (including encrypted PDFs), as well as SVG to PDF conversion.
 
@@ -20,7 +20,32 @@ PDF/SVG Converter is a powerful PDF/SVG format conversion tool that supports mul
 * Supports color progress bar display
 * Supports merging multiple SVG files into a single PDF in order
 
-## Building
+## Build Scripts
+This project provides build scripts for Arch Linux and Windows (MSYS2) environments.
+
+#### Arch Linux
+Arch Linux users can install directly from the AUR, for example using the AUR helper `paru`:
+```bash
+paru -S pdf-svg-conv
+```
+
+Alternatively, you can manually clone the AUR repository and build/install:
+```bash
+git clone https://aur.archlinux.org/pdf-svg-conv.git
+cd pdf-svg-conv
+makepkg -si
+```
+
+#### Windows (MSYS2)
+Windows (MSYS2) users can build using the provided [`PKGBUILD`](https://gist.github.com/wszqkzqk/5ece53f3cda6213c62c5f77a9da26af4). For example, run the following commands in the MSYS2 UCRT64 environment's `bash` shell:
+```bash
+mkdir live-photo-conv
+cd live-photo-conv
+wget https://gist.githubusercontent.com/wszqkzqk/5ece53f3cda6213c62c5f77a9da26af4/raw/PKGBUILD
+makepkg-mingw -si
+```
+
+## Manual Build
 ### Dependencies
 **Runtime dependencies**:
 * GLib
