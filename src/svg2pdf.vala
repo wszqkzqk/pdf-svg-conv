@@ -142,9 +142,11 @@ public class PdfSvgConv.Svg2Pdf {
             return 1; // Missing input or output file path error
         }
 
-        // The last argument is the output PDF file, the rest are input SVG files
+        // The last argument is the output PDF file
+        // The first argument (arg[0]) is the executable name
+        // The rest are input SVG files
         string pdf_file = args[args.length - 1];
-        string[] svg_files = args[0:args.length - 1];
+        string[] svg_files = args[1:args.length - 1];
 
         return convert_svgs (svg_files, pdf_file);
     }
