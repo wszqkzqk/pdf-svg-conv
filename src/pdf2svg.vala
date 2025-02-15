@@ -95,6 +95,7 @@ Hint: For multi-page conversion, use a format string like 'output-%04d.svg'."
         }
 
         if (args.length != 3) {
+            Reporter.error_puts ("ArgumentError", "Only 2 arguments (input PDF file and output SVG file) are allowed.");
             stderr.puts (opt_context.get_help (true, null));
             return 1; // Argument count error
         }
