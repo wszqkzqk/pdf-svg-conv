@@ -1,0 +1,2 @@
+option('manpages', type: 'feature', value: 'auto',
+    description: 'Build manpages')
