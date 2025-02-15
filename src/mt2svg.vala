@@ -33,16 +33,20 @@ public class PdfSvgConv.MT2Svg {
     }
 
     // Generate unique SVG file name for each page.
-    static inline string get_svg_filename_for_page (string base_svg, int page_index) {
-        int pos = base_svg.last_index_of_char ('.');
-        int index_from_1 = page_index + 1;
-        if (pos < 0) {
-            return base_svg.concat ("-", index_from_1.to_string (), ".svg");
-        } else {
-            string name = base_svg[0: pos];
-            string ext = base_svg[pos:];
-            return name.concat ("-", index_from_1.to_string (), ext);
-        }
+    static inline string get_svg_filename_for_page (string base_svg, int page_index) throws RegexError {
+        GLib.Regex regex = /%[-+0 #]*(?:(?!\*)\d+)?(?:\.(?:(?!\*)\d+))?d/;
+        string replaced = regex.replace_eval (
+            base_svg, 
+            base_svg.length, 
+            0, 
+            RegexMatchFlags.NEWLINE_ANY, 
+            (match_info, builder) => {
+                // MUST `append`, otherwise the previous content will be lost
+                builder.append_printf (match_info.fetch (0), page_index + 1);
+                return false;
+            }
+        );
+        return replaced;
     }
 
     inline void automt_convert_page (Poppler.Document pdffile, int index,
@@ -74,17 +78,9 @@ public class PdfSvgConv.MT2Svg {
     }
 
     public int convert_pdf (string pdf_uri, string svg_filename, string? password, string? page_label) {
-        // Open the PDF file
-        Poppler.Document pdffile;
         try {
-            pdffile = new Poppler.Document.from_file (pdf_uri, password);
-        } catch (Error e) {
-            Reporter.error_puts ("PDFOpenError", e.message);
-            return 1; // File error
-        }
+            var pdffile = new Poppler.Document.from_file (pdf_uri, password);
 
-        // Set up thread pool
-        try { // Catch ThreadError
             if (this.num_threads > 1) {
                 this.pool = new ThreadPool<Task2Svg>.with_owned_data ((task) => {
                     task.run ();

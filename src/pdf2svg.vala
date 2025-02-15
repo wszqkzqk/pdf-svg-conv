@@ -48,12 +48,18 @@ public class PdfSvgConv.Pdf2Svg {
 #else
         var args = strdupv (original_args);
 #endif
-        var opt_context = new OptionContext ("<input PDF file> <output SVG file>");
+        var opt_context = new OptionContext ("<input-PDF-file> <output-SVG-file>");
         // DO NOT use the default help option provided by g_print
         // g_print will force to convert character set to windows's code page
         // which is imcompatible windows's bash, zsh, etc.
         opt_context.set_help_enabled (false);
         opt_context.add_main_entries (options, null);
+        // Set a summary hint for multi-page output:
+        opt_context.set_summary (
+            "Convert a PDF file to SVG file(s).
+
+Hint: For multi-page conversion, use a format string like 'output-%04d.svg'."
+        );
         try {
             opt_context.parse_strv (ref args);
         } catch (OptionError e) {
