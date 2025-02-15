@@ -1,7 +1,7 @@
 # PDF/SVG Converter：强大的 PDF/SVG 格式转化工具
 [English](README.md) | 简体中文
 
-PDF/SVG Converter 是一个强大的 PDF/SVG 格式转化工具，支持多线程的 PDF 转 SVG，支持 PDF 解密，计划支持 SVG 转 PDF。
+PDF/SVG Converter 是一个强大的 PDF/SVG 格式转化工具，支持多线程的 PDF 转 SVG（支持加密的 PDF），以及 SVG 转 PDF。
 
 ## 特性
 
@@ -9,6 +9,7 @@ PDF/SVG Converter 是一个强大的 PDF/SVG 格式转化工具，支持多线�
 
 * 支持多线程的 PDF 转 SVG
   * 每页转化并行处理，提高转化速度
+* 支持彩色进度条显示
 * 支持 PDF 密码解密
 * 支持选择性转化
   * 支持指定页码转化
@@ -16,10 +17,11 @@ PDF/SVG Converter 是一个强大的 PDF/SVG 格式转化工具，支持多线�
   * 支持 `printf` 的整数格式化输出 SVG 文件名
     * 例如 `output-%03d.svg` 会输出 `output-001.svg`, `output-002.svg`, ...
 
-### 计划
+### Neo SVG to PDF (`neosvg2pdf`)
 
-* 支持 SVG 转 PDF （`neosvg2pdf`）
-* 支持进度显示
+* 支持 SVG 转 PDF
+* 支持彩色进度条显示
+* 支持将多张 SVG 按照顺序合并为单个 PDF
 
 ## 构建
 
@@ -32,9 +34,9 @@ PDF/SVG Converter 是一个强大的 PDF/SVG 格式转化工具，支持多线�
   * GIO
 * Cairo
 * Poppler
-  * Poppler-Glib
+  * Poppler-GLib
 * Pango
-* RSVG （待`neosvg2pdf`支持）
+* RSVG
 * help2man （可选，用于生成 manpage）
 
 **构建时依赖** - 除了运行时依赖外，还需要：
@@ -124,3 +126,29 @@ neopdf2svg -l 5-9 example.pdf output-%04d.svg
 ```bash
 neopdf2svg -p xxxxxx example.pdf output-%04d.svg
 ```
+
+### Neo SVG to PDF (`neosvg2pdf`)
+
+运行 `neosvg2pdf --help` 查看帮助信息：
+
+```log
+Usage:
+  neosvg2pdf [OPTION…] <input-SVG-file> [moret-SVG-files ...] <output-PDF-file>
+
+Convert SVG files to a PDF file.
+
+Options:
+  -h, --help        Show help message
+  -v, --version     Display version
+  --color=LEVEL     Color level of log, 0 for no color, 1 for auto, 2 for always, defaults to 1
+```
+
+例如，将 `example1.svg`, `example2.svg` 转化为 `output.pdf`：
+
+```bash
+neosvg2pdf example1.svg example2.svg output.pdf
+```
+
+## 许可证
+
+PDF/SVG Converter 使用 LGPL-2.1-or-later 许可证。有关详细信息，请参阅 [COPYING](COPYING) 文件。

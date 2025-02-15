@@ -1,12 +1,13 @@
 # PDF/SVG Converter: A Powerful PDF/SVG Format Conversion Tool
-English | [简体中文](README-zh.md)
+[English](README.md) | Simplified Chinese
 
-PDF/SVG Converter is a powerful PDF/SVG format conversion tool that supports multi-threaded PDF to SVG conversion, PDF decryption, and plans to support SVG to PDF conversion.
+PDF/SVG Converter is a powerful PDF/SVG format conversion tool that supports multi-threaded PDF to SVG conversion (including encrypted PDFs), as well as SVG to PDF conversion.
 
 ## Features
 ### Neo PDF to SVG (`neopdf2svg`)
 * Supports multi-threaded PDF to SVG conversion
   * Each page is processed in parallel, improving conversion speed
+* Supports color progress bar display
 * Supports PDF password decryption
 * Supports selective conversion
   * Supports conversion of specified page numbers
@@ -14,9 +15,10 @@ PDF/SVG Converter is a powerful PDF/SVG format conversion tool that supports mul
   * Supports `printf`-style integer formatting for SVG filenames
     * For example, `output-%03d.svg` will output `output-001.svg`, `output-002.svg`, ...
 
-### Planned Features
-* Support for SVG to PDF (`neosvg2pdf`)
-* Support for progress display
+### Neo SVG to PDF (`neosvg2pdf`)
+* Supports SVG to PDF conversion
+* Supports color progress bar display
+* Supports merging multiple SVG files into a single PDF in order
 
 ## Building
 ### Dependencies
@@ -28,7 +30,7 @@ PDF/SVG Converter is a powerful PDF/SVG format conversion tool that supports mul
 * Poppler
   * Poppler-Glib
 * Pango
-* RSVG (pending `neosvg2pdf` support)
+* RSVG
 * help2man (optional, for generating manpages)
 
 **Build-time dependencies** - In addition to runtime dependencies, you also need:
@@ -100,3 +102,23 @@ Specify a PDF password:
 ```bash
 neopdf2svg -p xxxxxx example.pdf output-%04d.svg
 ```
+
+### Neo SVG to PDF (`neosvg2pdf`)
+Run `neosvg2pdf --help` to view help information:
+```log
+Usage:
+  neosvg2pdf [OPTION…] <input-SVG-file> [more-SVG-files ...] <output-PDF-file>
+Convert SVG files to a PDF file.
+Options:
+  -h, --help        Show help message
+  -v, --version     Display version
+  --color=LEVEL     Color level of log, 0 for no color, 1 for auto, 2 for always, defaults to 1
+```
+
+For example, convert `example1.svg`, `example2.svg` to `output.pdf`:
+```bash
+neosvg2pdf example1.svg example2.svg output.pdf
+```
+
+## License
+PDF/SVG Converter is licensed under LGPL-2.1-or-later. For more details, see the [COPYING](COPYING) file.
