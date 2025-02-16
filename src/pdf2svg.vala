@@ -30,7 +30,7 @@ public class PdfSvgConv.Pdf2Svg {
         { "help", 'h', OptionFlags.NONE, OptionArg.NONE, ref show_help, "Show help message", null },
         { "version", 'v', OptionFlags.NONE, OptionArg.NONE, ref show_version, "Display version", null },
         { "color", '\0', OptionFlags.NONE, OptionArg.INT, ref color_level, "Color level of log, 0 for no color, 1 for auto, 2 for always, defaults to 1", "LEVEL" },
-        { "threads", 'T', OptionFlags.NONE, OptionArg.INT, ref num_threads, "Number of threads to use for extracting, 0 for auto", "NUM" },
+        { "threads", 'T', OptionFlags.NONE, OptionArg.INT, ref num_threads, "Number of threads to use, 0 for auto, defaults to 0", "NUM" },
         { "password", 'p', OptionFlags.NONE, OptionArg.STRING, ref password, "Password for the PDF file", "PASSWORD" },
         { "label", 'l', OptionFlags.NONE, OptionArg.STRING, ref page_label, "Page label, may be number (eg. 1), range (eg. 5-9), or 'all', 1-indexed", "LABEL" },
         null
