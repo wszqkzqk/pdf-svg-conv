@@ -131,7 +131,7 @@ public class PdfSvgConv.Svg2Pdf {
         }
 
         if (show_version) {
-            Reporter.info_puts ("Live Photo Converter", VERSION);
+            Reporter.info_puts ("SVG to PDF Converter", VERSION);
             return 0;
         }
 

@@ -90,7 +90,7 @@ Hint: For multi-page conversion, use a format string like 'output-%04d.svg'."
         }
 
         if (show_version) {
-            Reporter.info_puts ("Live Photo Converter", VERSION);
+            Reporter.info_puts ("PDF to SVG Converter", VERSION);
             return 0;
         }
 

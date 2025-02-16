@@ -61,12 +61,12 @@ public class PdfSvgConv.SvgMakerMT {
 
     // Generate unique SVG file name for each page.
     static inline string get_svg_filename_for_page (string base_svg, int page_index) throws RegexError {
-        GLib.Regex regex = /%[-+0 #]*(?:(?!\*)\d+)?(?:\.(?:(?!\*)\d+))?d/;
-        string replaced = regex.replace_eval (
-            base_svg, 
-            base_svg.length, 
-            0, 
-            RegexMatchFlags.NEWLINE_ANY, 
+        GLib.Regex re_int_printf = /%[-+0 #]*(?:\d+)?(?:\.\d+)?d/;
+        string replaced = re_int_printf.replace_eval (
+            base_svg,
+            -1,
+            0,
+            0,
             (match_info, builder) => {
                 // MUST `append`, otherwise the previous content will be lost
                 builder.append_printf (match_info.fetch (0), page_index + 1);
@@ -110,6 +110,12 @@ public class PdfSvgConv.SvgMakerMT {
     }
 
     public int convert_pdf (string pdf_uri, string svg_filename, string? password, string? page_label) {
+        Regex re_valid_label = /^(?:\d+(?:-\d+)?|all)$/;
+        if ((page_label != null) && (! re_valid_label.match (page_label))) {
+            Reporter.error_puts ("PageFormatError", "invalid page label");
+            return 1; // Invalid page label error
+        }
+
         Poppler.Document pdffile;
         try {
             pdffile = new Poppler.Document.from_file (pdf_uri, password);
