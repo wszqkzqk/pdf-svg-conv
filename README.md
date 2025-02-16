@@ -54,7 +54,6 @@ makepkg-mingw -si
 * Cairo
 * Poppler
   * Poppler-GLib
-* Pango
 * Rsvg
 * help2man (optional, for generating manpages)
 
@@ -64,12 +63,12 @@ makepkg-mingw -si
 
 Install dependencies on Arch Linux:
 ```bash
-sudo pacman -S --needed meson vala glib2 cairo poppler-glib pango librsvg help2man
+sudo pacman -S --needed meson vala glib2 cairo poppler-glib librsvg help2man
 ```
 
 Install dependencies on MSYS2:
 ```bash
-pacman -S --needed mingw-w64-ucrt-x86_64-meson mingw-w64-ucrt-x86_64-vala mingw-w64-ucrt-x86_64-glib2 mingw-w64-ucrt-x86_64-cairo mingw-w64-ucrt-x86_64-poppler mingw-w64-ucrt-x86_64-pango mingw-w64-ucrt-x86_64-librsvg help2man
+pacman -S --needed mingw-w64-ucrt-x86_64-meson mingw-w64-ucrt-x86_64-vala mingw-w64-ucrt-x86_64-glib2 mingw-w64-ucrt-x86_64-cairo mingw-w64-ucrt-x86_64-poppler mingw-w64-ucrt-x86_64-librsvg help2man
 ```
 
 ### Compilation

@@ -66,7 +66,6 @@ makepkg-mingw -si
 * Cairo
 * Poppler
   * Poppler-GLib
-* Pango
 * Rsvg
 * help2man （可选，用于生成 manpage）
 
@@ -78,13 +77,13 @@ makepkg-mingw -si
 在 Arch Linux 上安装依赖：
 
 ```bash
-sudo pacman -S --needed meson vala glib2 cairo poppler-glib pango librsvg help2man
+sudo pacman -S --needed meson vala glib2 cairo poppler-glib librsvg help2man
 ```
 
 在 MSYS2 上安装依赖：
 
 ```bash
-pacman -S --needed mingw-w64-ucrt-x86_64-meson mingw-w64-ucrt-x86_64-vala mingw-w64-ucrt-x86_64-glib2 mingw-w64-ucrt-x86_64-cairo mingw-w64-ucrt-x86_64-poppler-glib mingw-w64-ucrt-x86_64-pango mingw-w64-ucrt-x86_64-librsvg help2man
+pacman -S --needed mingw-w64-ucrt-x86_64-meson mingw-w64-ucrt-x86_64-vala mingw-w64-ucrt-x86_64-glib2 mingw-w64-ucrt-x86_64-cairo mingw-w64-ucrt-x86_64-poppler-glib mingw-w64-ucrt-x86_64-librsvg help2man
 ```
 
 ### 编译
