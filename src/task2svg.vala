@@ -44,5 +44,6 @@ public class PdfSvgConv.Task2Svg {
         // Render the PDF file into the SVG file
         page.render_for_printing (drawcontext);
         drawcontext.show_page ();
+        surface.finish ();
     }
 }

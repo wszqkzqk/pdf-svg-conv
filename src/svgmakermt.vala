@@ -94,6 +94,7 @@ public class PdfSvgConv.SvgMakerMT {
             // Render the PDF file into the SVG file
             page.render_for_printing (drawcontext);
             drawcontext.show_page ();
+            surface.finish ();
             // Update progress bar
             success_count += 1;
             progress.update (success_count, failure_count);
