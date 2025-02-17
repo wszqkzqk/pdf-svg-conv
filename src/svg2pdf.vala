@@ -52,28 +52,28 @@ public class PdfSvgConv.Svg2Pdf {
             }
 
             bool has_width, has_height, has_viewbox;
-            Rsvg.Length width, height;
-            Rsvg.Rectangle bbox;
-            svg_handle.get_intrinsic_dimensions (out has_width, out width, out has_height, out height, out has_viewbox, out bbox);
-            double width_fp = (width.length > 0) ? width.length : 595; // A4 width
-            double height_fp = (height.length > 0) ? height.length : 842; // A4 height
+            Rsvg.Length svg_width, svg_height;
+            Rsvg.Rectangle viewbox;
+            svg_handle.get_intrinsic_dimensions (out has_width, out svg_width, out has_height, out svg_height, out has_viewbox, out viewbox);
+            double width = (svg_width.length > 0) ? svg_width.length : 595; // A4 width
+            double height = (svg_height.length > 0) ? svg_height.length : 842; // A4 height
             // If no viewbox or invalid viewbox, use the whole page
-            if ((! has_viewbox) || bbox.width <= 0 || bbox.height <= 0) {
-                bbox.x = 0;
-                bbox.y = 0;
-                bbox.width = width_fp;
-                bbox.height = height_fp;
+            if ((! has_viewbox) || viewbox.width <= 0 || viewbox.height <= 0) {
+                viewbox.x = 0;
+                viewbox.y = 0;
+                viewbox.width = width;
+                viewbox.height = height;
             }
 
             if (surface == null) {
-                surface = new Cairo.PdfSurface (pdf_file, width_fp, height_fp);
+                surface = new Cairo.PdfSurface (pdf_file, width, height);
                 cr = new Cairo.Context (surface);
             } else {
-                surface.set_size (width_fp, height_fp);
+                surface.set_size (width, height);
             }
 
             try {
-                svg_handle.render_document (cr, bbox);
+                svg_handle.render_document (cr, viewbox);
             } catch (Error e) {
                 Reporter.error ("RsvgError", "failed to render file %s: %s", svg_file, e.message);
                 failure_count += 1;
