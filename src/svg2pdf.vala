@@ -57,6 +57,13 @@ public class PdfSvgConv.Svg2Pdf {
             svg_handle.get_intrinsic_dimensions (out has_width, out width, out has_height, out height, out has_viewbox, out bbox);
             double width_fp = (width.length > 0) ? width.length : 595; // A4 width
             double height_fp = (height.length > 0) ? height.length : 842; // A4 height
+            // If no viewbox or invalid viewbox, use the whole page
+            if ((! has_viewbox) || bbox.width <= 0 || bbox.height <= 0) {
+                bbox.x = 0;
+                bbox.y = 0;
+                bbox.width = width_fp;
+                bbox.height = height_fp;
+            }
 
             if (surface == null) {
                 surface = new Cairo.PdfSurface (pdf_file, width_fp, height_fp);
@@ -76,6 +83,10 @@ public class PdfSvgConv.Svg2Pdf {
             
             success_count += 1;
             progress.update (success_count, failure_count);
+        }
+
+        if (surface != null) {
+            surface.finish ();
         }
 
         return 0;
