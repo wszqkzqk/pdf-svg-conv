@@ -25,26 +25,22 @@ public class PdfSvgConv.SvgMakerMT {
     Reporter.ProgressBar progress;
     uint _success_count = 0;
     uint _failure_count = 0;
-    Mutex mutex;
 
     uint success_count {
         get {
-            return _success_count;
+            return AtomicUint.get (ref _success_count);
         }
         set {
-            mutex.lock ();
-            _success_count = value;
-            mutex.unlock ();
+            AtomicUint.set (ref _success_count, value);
         }
     }
+
     uint failure_count {
         get {
-            return _failure_count;
+            return AtomicUint.get (ref _failure_count);
         }
         set {
-            mutex.lock ();
-            _failure_count = value;
-            mutex.unlock ();
+            AtomicUint.set (ref _failure_count, value);
         }
     }
 
@@ -55,7 +51,6 @@ public class PdfSvgConv.SvgMakerMT {
             this.num_threads = (int) get_num_processors ();
         }
 
-        mutex = Mutex ();
         progress = new Reporter.ProgressBar (0, "Converting to SVG");
     }
 
@@ -96,7 +91,7 @@ public class PdfSvgConv.SvgMakerMT {
             drawcontext.show_page ();
             surface.finish ();
             // Update progress bar
-            success_count += 1;
+            AtomicUint.inc (ref _success_count);
             progress.update (success_count, failure_count);
         } else {
             // Multi-threaded conversion.
@@ -129,7 +124,7 @@ public class PdfSvgConv.SvgMakerMT {
             try {
                 this.pool = new ThreadPool<Task2Svg>.with_owned_data ((task) => {
                     task.run ();
-                    success_count += 1;
+                    AtomicUint.inc (ref _success_count);
                     progress.update (success_count, failure_count);
                 }, this.num_threads, false);
             } catch (ThreadError e) {
@@ -149,11 +144,11 @@ public class PdfSvgConv.SvgMakerMT {
                     automt_convert_page (pdffile, i, page_svg, pdf_uri, password);
                 } catch (RegexError e) {
                     Reporter.error ("RegexError", e.message);
-                    failure_count += 1;
+                    AtomicUint.inc (ref _failure_count);
                     progress.update (success_count, failure_count);
                 } catch (Error e) {
                     Reporter.error ("PopplerError", "failed to convert page %d: %s", i + 1, e.message);
-                    failure_count += 1;
+                    AtomicUint.inc (ref _failure_count);
                     progress.update (success_count, failure_count);
                 }
             }
@@ -189,11 +184,11 @@ public class PdfSvgConv.SvgMakerMT {
                     automt_convert_page (pdffile, i, page_svg, pdf_uri, password);
                 } catch (RegexError e) {
                     Reporter.error ("RegexError", e.message);
-                    failure_count += 1;
+                    AtomicUint.inc (ref _failure_count);
                     progress.update (success_count, failure_count);
                 } catch (Error e) {
                     Reporter.error ("PopplerError", "failed to convert page %d: %s", i + 1, e.message);
-                    failure_count += 1;
+                    AtomicUint.inc (ref _failure_count);
                     progress.update (success_count, failure_count);
                 }
             }
@@ -218,7 +213,7 @@ public class PdfSvgConv.SvgMakerMT {
                 automt_convert_page (pdffile, page_index, svg_filename, pdf_uri, password);
             } catch (Error e) {
                 Reporter.error ("PopplerError", "failed to convert page %d: %s", page_index + 1, e.message);
-                failure_count += 1;
+                AtomicUint.inc (ref _failure_count);
                 progress.update (success_count, failure_count);
             }
             this.num_threads = thread_old;

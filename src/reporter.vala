@@ -263,23 +263,33 @@ public class PdfSvgConv.Reporter {
     public class ProgressBar {
 
         string title;
-        double percentage = 0.0;
-        int current_step = 0;
         char fill_char = '#';
         char empty_char = '-';
         Mutex mutex;
         int _total_steps = 0;
+        int _current_step = 0;
 
+        /**
+         * The total number of steps for the progress bar.
+         */
         public int total_steps {
             get {
-                return _total_steps;
+                return AtomicInt.get (ref _total_steps);
             }
             set {
-                mutex.lock ();
-                _total_steps = value;
-                current_step = 0;
-                percentage = 0.0;
-                mutex.unlock ();
+                AtomicInt.set (ref _total_steps, value);
+            }
+        }
+
+        /**
+         * The current step number of the progress bar.
+         */
+        public int current_step {
+            get {
+                return AtomicInt.get (ref _current_step);
+            }
+            set {
+                AtomicInt.set (ref _current_step, value);
             }
         }
 
@@ -311,12 +321,11 @@ public class PdfSvgConv.Reporter {
          */
         public int update (uint success_count, uint failure_count) {
             mutex.lock ();
-            current_step += 1;
-            current_step = (current_step > total_steps) ? total_steps : current_step;
-            percentage = (double) current_step / total_steps * 100.0;
+            _current_step += 1;
+            _current_step = (_current_step > _total_steps) ? _total_steps : _current_step;
             print_progress (success_count, failure_count);
             mutex.unlock ();
-            return current_step;
+            return _current_step;
         }
 
         /**
@@ -326,6 +335,7 @@ public class PdfSvgConv.Reporter {
          * @param failure_count The number of failures.
          */
         public void print_progress (uint success_count, uint failure_count) {
+            var percentage = (double) current_step / total_steps * 100.0;
             // The actual length of the prefix is the length of UNCOLORED prefix
             // ANSI escapecode should not be counted
             var prefix = "\rSuccess: %u Failure: %u ".printf (success_count, failure_count);
