@@ -4,7 +4,7 @@ English | [简体中文](README-zh.md)
 PDF/SVG Converter is a powerful PDF/SVG format conversion tool that supports multi-threaded PDF to SVG conversion (including encrypted PDFs), as well as SVG to PDF conversion.
 
 ## Features
-### Neo PDF to SVG (`neopdf2svg`)
+### PDF to SVG (`pdf2svg`)
 * Supports multi-threaded PDF to SVG conversion
   * Each page is processed in parallel, improving conversion speed
 * Supports color progress bar display
@@ -15,7 +15,7 @@ PDF/SVG Converter is a powerful PDF/SVG format conversion tool that supports mul
   * Supports `printf`-style integer formatting for multi SVG filenames
     * For example, `output-%03d.svg` will output `output-001.svg`, `output-002.svg`, ...
 
-### Neo SVG to PDF (`neosvg2pdf`)
+### SVG to PDF (`svg2pdf`)
 * Supports SVG to PDF conversion
 * Supports color progress bar display
 * Supports merging multiple SVG files into a single PDF in order
@@ -91,11 +91,11 @@ meson install -C builddir
 ```
 
 ## Usage
-### Neo PDF to SVG (`neopdf2svg`)
-Run `neopdf2svg --help` to view help information:
+### PDF to SVG (`pdf2svg`)
+Run `pdf2svg --help` to view help information:
 ```log
 Usage:
-  neopdf2svg [OPTION…] <input-PDF-file> <output-SVG-file>
+  pdf2svg [OPTION…] <input-PDF-file> <output-SVG-file>
 Convert a PDF file to SVG file(s).
 Hint: For multi-page conversion, use a format string like 'output-%04d.svg'.
 Options:
@@ -109,29 +109,29 @@ Options:
 
 For example, convert `example.pdf` to `output-%04d.svg`:
 ```bash
-neopdf2svg example.pdf output-%04d.svg
+pdf2svg example.pdf output-%04d.svg
 ```
 
 Convert the first page of `example.pdf` to `output.svg`:
 ```bash
-neopdf2svg -l 1 example.pdf output.svg
+pdf2svg -l 1 example.pdf output.svg
 ```
 
 Convert pages 5-9 of `example.pdf` to `output-%04d.svg`:
 ```bash
-neopdf2svg -l 5-9 example.pdf output-%04d.svg
+pdf2svg -l 5-9 example.pdf output-%04d.svg
 ```
 
 Specify a PDF password:
 ```bash
-neopdf2svg -p xxxxxx example.pdf output-%04d.svg
+pdf2svg -p xxxxxx example.pdf output-%04d.svg
 ```
 
-### Neo SVG to PDF (`neosvg2pdf`)
-Run `neosvg2pdf --help` to view help information:
+### SVG to PDF (`svg2pdf`)
+Run `svg2pdf --help` to view help information:
 ```log
 Usage:
-  neosvg2pdf [OPTION…] <input-SVG-file> [more-SVG-files ...] <output-PDF-file>
+  svg2pdf [OPTION…] <input-SVG-file> [more-SVG-files ...] <output-PDF-file>
 Convert SVG files to a PDF file.
 Options:
   -h, --help        Show help message
@@ -141,7 +141,7 @@ Options:
 
 For example, convert `example1.svg`, `example2.svg` to `output.pdf`:
 ```bash
-neosvg2pdf example1.svg example2.svg output.pdf
+svg2pdf example1.svg example2.svg output.pdf
 ```
 
 ## License

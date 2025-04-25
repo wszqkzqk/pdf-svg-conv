@@ -31,8 +31,8 @@ svg2pdf_source = basic_sources + [
   'svg2pdf.vala',
 ]
 
-pdf2svg_name = 'neopdf2svg'
-svg2pdf_name = 'neosvg2pdf'
+pdf2svg_name = 'pdf2svg'
+svg2pdf_name = 'svg2pdf'
 
 pdf2svg_bin = executable(
   pdf2svg_name,
