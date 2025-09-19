@@ -274,10 +274,15 @@ public class PdfSvgConv.Reporter {
          */
         public int total_steps {
             get {
-                return AtomicInt.get (ref _total_steps);
+                mutex.lock ();
+                var result = _total_steps;
+                mutex.unlock ();
+                return result;
             }
             set {
-                AtomicInt.set (ref _total_steps, value);
+                mutex.lock ();
+                _total_steps = value;
+                mutex.unlock ();
             }
         }
 
@@ -286,10 +291,15 @@ public class PdfSvgConv.Reporter {
          */
         public int current_step {
             get {
-                return AtomicInt.get (ref _current_step);
+                mutex.lock ();
+                var result = _current_step;
+                mutex.unlock ();
+                return result;
             }
             set {
-                AtomicInt.set (ref _current_step, value);
+                mutex.lock ();
+                _current_step = value;
+                mutex.unlock ();
             }
         }
 
@@ -306,7 +316,7 @@ public class PdfSvgConv.Reporter {
                             char fill_char = '#',
                             char empty_char = '-') {
             this.title = title;
-            this.total_steps = total_steps;
+            this._total_steps = total_steps;
             this.fill_char = fill_char;
             this.empty_char = empty_char;
             this.mutex = Mutex ();
@@ -324,9 +334,9 @@ public class PdfSvgConv.Reporter {
             _current_step += 1;
             _current_step = (_current_step > _total_steps) ? _total_steps : _current_step;
             print_progress (success_count, failure_count);
+            var current = _current_step;
             mutex.unlock ();
-            return _current_step;
-
+            return current;
         }
 
         /**
@@ -336,7 +346,16 @@ public class PdfSvgConv.Reporter {
          * @param failure_count The number of failures.
          */
         public void print_progress (uint success_count, uint failure_count) {
-            var percentage = (double) current_step / total_steps * 100.0;
+            mutex.lock ();
+            var current = _current_step;
+            var total = _total_steps;
+            mutex.unlock ();
+
+            if (total == 0) {
+                return;
+            }
+            var percentage = (double) current / total * 100.0;
+
             // The actual length of the prefix is the length of UNCOLORED prefix
             // ANSI escapecode should not be counted
             var prefix = "\rSuccess: %u Failure: %u ".printf (success_count, failure_count);
