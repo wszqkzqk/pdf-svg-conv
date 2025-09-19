@@ -27,7 +27,6 @@ public class PdfSvgConv.Pdf2Svg {
     static string? page_label = null;
 
     const OptionEntry[] options = {
-        { "help", 'h', OptionFlags.NONE, OptionArg.NONE, ref show_help, "Show help message", null },
         { "version", 'v', OptionFlags.NONE, OptionArg.NONE, ref show_version, "Display version", null },
         { "color", '\0', OptionFlags.NONE, OptionArg.INT, ref color_level, "Color level of log, 0 for no color, 1 for auto, 2 for always; defaults to 1", "LEVEL" },
         { "threads", 'T', OptionFlags.NONE, OptionArg.INT, ref num_threads, "Number of threads to use, 0 for auto; defaults to 0", "NUM" },
@@ -38,10 +37,7 @@ public class PdfSvgConv.Pdf2Svg {
 
     // Main program function
     static int main (string[] original_args) {
-        // Compatibility for Windows and Unix
-        if (Intl.setlocale (LocaleCategory.ALL, ".UTF-8") == null) {
-            Intl.setlocale ();
-        }
+        Intl.setlocale ();
 
 #if WINDOWS
         var args = Win32.get_command_line ();
@@ -52,7 +48,6 @@ public class PdfSvgConv.Pdf2Svg {
         // DO NOT use the default help option provided by g_print
         // g_print will force to convert character set to windows's code page
         // which is imcompatible windows's bash, zsh, etc.
-        opt_context.set_help_enabled (false);
         opt_context.add_main_entries (options, null);
         // Set a summary hint for multi-page output:
         opt_context.set_summary (
@@ -64,7 +59,7 @@ Hint: For multi-page conversion, use a format string like 'output-%04d.svg'."
             opt_context.parse_strv (ref args);
         } catch (OptionError e) {
             Reporter.error_puts ("OptionError", e.message);
-            stderr.printf ("\n%s", opt_context.get_help (true, null));
+            printerr ("\n%s", opt_context.get_help (true, null));
             return 1; // Argument parsing error
         }
 
@@ -84,11 +79,6 @@ Hint: For multi-page conversion, use a format string like 'output-%04d.svg'."
             break;
         }
 
-        if (show_help) {
-            stderr.puts (opt_context.get_help (true, null));
-            return 0;
-        }
-
         if (show_version) {
             Reporter.info_puts ("PDF to SVG Converter", VERSION);
             return 0;
@@ -96,7 +86,7 @@ Hint: For multi-page conversion, use a format string like 'output-%04d.svg'."
 
         if (args.length != 3) {
             Reporter.error_puts ("ArgumentError", "Only 2 arguments (input PDF file and output SVG file) are allowed.");
-            stderr.printf ("\n%s", opt_context.get_help (true, null));
+            printerr ("\n%s", opt_context.get_help (true, null));
             return 1; // Argument count error
         }
 
