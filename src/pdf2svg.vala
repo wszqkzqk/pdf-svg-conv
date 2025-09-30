@@ -19,7 +19,6 @@
 
 [Compact (opaque = true)]
 public class PdfSvgConv.Pdf2Svg {
-    static bool show_help = false;
     static bool show_version = false;
     static int color_level = 1;
     static int num_threads = 0;
